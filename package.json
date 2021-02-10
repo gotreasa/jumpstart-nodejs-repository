@@ -1,34 +1,34 @@
 {
-  "name": "templateRepository",
+  "name": "jumpstart-nodejs-repository",
   "version": "1.0.0",
   "description": "Template for basing repositories off",
-  "main": "src/templateRepository.js",
+  "main": "src/jumpstart-nodejs-repository.js",
   "scripts": {
     "detect-secrets": "detect-secrets-launcher * --baseline .secrets-baseline",
     "lint": "eslint --cache --fix",
     "postinstall": "npm run requirements-check",
     "requirements-check": "node check_node_version.js",
-    "start": "node src/templateRepository.js",
+    "start": "node src/jumpstart-nodejs-repository.js",
     "test:watch": "jest --watchAll --coverage",
     "test": "jest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gotreasa/templateRepository.git"
+    "url": "git+https://github.com/gotreasa/jumpstart-nodejs-repository.git"
   },
   "author": "Gearoid O'Treasaigh",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/gotreasa/templateRepository/issues"
+    "url": "https://github.com/gotreasa/jumpstart-nodejs-repository/issues"
   },
-  "homepage": "https://github.com/gotreasa/templateRepository#readme",
+  "homepage": "https://github.com/gotreasa/jumpstart-nodejs-repository#readme",
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@types/eslint": "^7.2.6",
     "@types/eslint-plugin-prettier": "^3.1.0",
     "@types/jest": "^26.0.20",
-    "@types/prettier": "^2.1.6",
+    "@types/prettier": "^2.2.0",
     "detect-secrets": "^1.0.6",
     "eslint": "^7.19.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -36,14 +36,14 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.1.3",
     "eslint-plugin-prettier": "^3.3.1",
-    "husky": "^4.3.8",
+    "husky": "^5.0.9",
     "jest": "^26.6.3",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
-    "snyk": "^1.440.3"
+    "snyk": "^1.450.0"
   },
   "engines": {
-    "node": "v14.15.1"
+    "node": "v14.15.5"
   },
   "husky": {
     "hooks": {
