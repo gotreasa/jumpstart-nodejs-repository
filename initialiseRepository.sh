@@ -126,6 +126,7 @@ function setupSonar() {
     sed -i '' 's/sonar.projectKey=gotreasa_templateRepository/sonar.projectKey='${projectKey}'/g' sonar-project.properties
     sed -i '' 's#sonar.links.scm=https://github.com/gotreasa/templateRepository#sonar.links.scm=https://github.com/'${GIT_ORG}'/'${repositoryName}'#g' sonar-project.properties
     sed -i '' 's#https://sonarcloud.io/dashboard?id=gotreasa_templateRepository#https://sonarcloud.io/dashboard?id='${projectKey}'#g' README.md
+    sed -i '' 's#https://sonarcloud.io/api/project_badges/measure?project=gotreasa_templateRepository#https://sonarcloud.io/api/project_badges/measure?project='${projectKey}'#g' README.md
 
     while [ -z "$SONAR_SECRET" ]; do
         echo -e "\n\nWhat is the sonar API key?"
@@ -146,6 +147,8 @@ function setupSnyk() {
         echo -e "\n\nWhat is the synk API key?"
         read -s SNYK_SECRET
     done
+    sed -i '' 's#https://snyk.io/test/github/gotreasa/templateRepository/badge.svg#https://snyk.io/test/github/'${GIT_ORG}'/'${repositoryName}'/badge.svg#g' README.md
+    sed -i '' 's#https://snyk.io/test/github/gotreasa/templateRepository#https://snyk.io/test/github/'${GIT_ORG}'/'${repositoryName}'#g' README.md
     gh secret set SNYK_TOKEN -b ${SNYK_SECRET}
 }
 
