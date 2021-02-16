@@ -124,7 +124,8 @@ function setupSonar() {
     echo "INFO: Updating sonar properties file"
     sed -i '' 's/sonar.organization=gotreasa/sonar.organization='${projectOrganisation}'/g' sonar-project.properties
     sed -i '' 's/sonar.projectKey=gotreasa_templateRepository/sonar.projectKey='${projectKey}'/g' sonar-project.properties
-    sed -i '' 's/sonar.links.scm=https:\/\/github.com\/gotreasa\/templateRepository/sonar.links.scm=https:\/\/github.com\/'${GIT_ORG}'\/'${repositoryName}'/g' sonar-project.properties
+    sed -i '' 's#sonar.links.scm=https://github.com/gotreasa/templateRepository#sonar.links.scm=https://github.com/'${GIT_ORG}'/'${repositoryName}'#g' sonar-project.properties
+    sed -i '' 's#https://sonarcloud.io/dashboard?id=gotreasa_templateRepository#https://sonarcloud.io/dashboard?id='${projectKey}'#g' README.md
 
     while [ -z "$SONAR_SECRET" ]; do
         echo -e "\n\nWhat is the sonar API key?"
