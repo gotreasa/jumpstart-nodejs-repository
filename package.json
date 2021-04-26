@@ -4,7 +4,9 @@
   "description": "Jumpstart project for starting a NodeJS repository",
   "scripts": {
     "detect-secrets": "detect-secrets-launcher * --baseline .secrets-baseline",
-    "lint": "eslint --cache --fix"
+    "lint": "eslint --cache --fix",
+    "precommit": "npm-run-all lint",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
