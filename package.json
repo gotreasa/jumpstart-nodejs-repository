@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Jumpstart project for starting a NodeJS repository",
   "scripts": {
-    "detect-secrets": "detect-secrets-launcher * --baseline .secrets-baseline",
+    "detect-secrets": "docker run --rm -v $(pwd):/code txo-toolbox-team-docker-local.artifactory.swg-devops.com/git-defenders/detect-secrets-hook:latest --baseline .secrets.baseline",
     "lint": "eslint --cache --fix",
-    "precommit": "npm-run-all lint",
+    "precommit": "npm-run-all lint detect-secrets",
     "prepare": "husky install"
   },
   "repository": {
@@ -24,7 +24,6 @@
     "@types/eslint": "^7.2.10",
     "@types/eslint-plugin-prettier": "^3.1.0",
     "@types/prettier": "^2.2.3",
-    "detect-secrets": "^1.0.6",
     "eslint": "^7.25.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
@@ -38,11 +37,5 @@
   },
   "engines": {
     "node": "v14.17.1"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "npm-run-all detect-secrets lint"
-    }
   }
 }
