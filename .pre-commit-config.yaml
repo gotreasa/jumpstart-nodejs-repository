@@ -1,0 +1,7 @@
+# .pre-commit-config.yaml
+-   repo: local
+    hooks:
+    -   id: detect-secrets-docker
+        name: detect-secrets-docker
+        language: docker_image
+        entry: txo-toolbox-team-docker-local.artifactory.swg-devops.com/git-defenders/detect-secrets-hook:latest --baseline .secrets.baseline
