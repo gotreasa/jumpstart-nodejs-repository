@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Jumpstart project for starting a NodeJS repository",
   "scripts": {
-    "detect-secrets": "docker run --rm -v $(pwd):/code txo-toolbox-team-docker-local.artifactory.swg-devops.com/git-defenders/detect-secrets-hook:latest --baseline .secrets.baseline",
+    "detect-secrets": "docker run --rm -v $(pwd):/code txo-toolbox-team-docker-local.artifactory.swg-devops.com/git-defenders/detect-secrets-hook:latest --baseline .secrets.baseline $(git diff --staged --name-only)",
     "lint": "eslint --cache --fix",
     "precommit": "npm-run-all lint detect-secrets",
     "prepare": "husky install"
