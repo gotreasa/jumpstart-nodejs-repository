@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/gotreasa/jumpstart-nodejs-repository#readme",
   "devDependencies": {
-    "@commitlint/cli": "^12.1.4",
+    "@commitlint/cli": "^17.0.0",
     "@commitlint/config-conventional": "^12.1.4",
     "@types/eslint": "^7.29.0",
     "@types/eslint-plugin-prettier": "^3.1.0",
