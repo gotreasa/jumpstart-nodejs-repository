@@ -80,7 +80,7 @@ jobs:
       - name: Detect any secrets in the code
         run: npm run detect-secrets $(git ls-files)
 
-  test:
+  test_and_coverage:
     runs-on: ubuntu-latest
     needs: [eslint-verify, prettier-verify, detect-secrets, commitlint]
     steps:
@@ -94,8 +94,8 @@ jobs:
         shell: bash
         run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
       - run: npm ci
-      - name: Mutation Tests
-        run: npm run test:mutation
+      - name: Run Tests
+        run: npm test
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -115,3 +115,20 @@ jobs:
           report_paths: 'reports/jest-junit.xml*'
           require_tests: true
           check_name: Jest Results
+
+  muatation_test:
+    runs-on: ubuntu-latest
+    needs: [eslint-verify, prettier-verify, detect-secrets, commitlint]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@main
+        with:
+          node-version: 20.11
+          cache: 'npm'
+      - name: 🗂️ Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+      - run: npm ci
+      - name: Run Tests
+        run: npm run test:mutation
