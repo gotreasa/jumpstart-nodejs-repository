@@ -26,6 +26,7 @@
     "prettier:verify": "prettier --check \"*.{css,js,json,md,sh,yaml,yml}\"",
     "test": "jest",
     "test:mutation": "npx stryker run",
+    "test:sonar": "npm test && env-cmd sonar-scanner",
     "test:watch": "npm run test -- --watch"
   },
   "lint-staged": {
