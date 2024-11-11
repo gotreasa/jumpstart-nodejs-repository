@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🤖 DependaBot AutoMerge
-        uses: ahmadnassri/action-dependabot-auto-merge@v2
+        uses: ahmadnassri/action-dependabot-auto-merge@master
         with:
           github-token: ${{ secrets.DEPENDABOT }}
           command: merge
