@@ -12,11 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🤖 DependaBot AutoMerge
-<<<<<<< HEAD
-        uses: ahmadnassri/action-dependabot-auto-merge@master
-=======
         uses: ahmadnassri/action-dependabot-auto-merge@v2
->>>>>>> 2b55c33 (ci: remove docker updates from Dependabot)
         with:
           github-token: ${{ secrets.DEPENDABOT }}
           command: merge
