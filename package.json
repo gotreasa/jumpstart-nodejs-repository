@@ -51,7 +51,7 @@
     "@eslint/js": "^9.16.0",
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
     "@stryker-mutator/core": "^8.6.0",
-    "@stryker-mutator/jest-runner": "^8.6.0",
+    "@stryker-mutator/jest-runner": "^8.7.0",
     "@types/babel__preset-env": "~7.9.7",
     "@types/eslint": "^9.6.1",
     "@types/eslint-config-prettier": "~6.11.3",
