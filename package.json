@@ -80,7 +80,7 @@
     "snyk": "^1.1295.2",
     "sonar-scanner": "^3.1.0",
     "sort-package-json": "^2.14.0",
-    "typesync": "^0.14.0"
+    "typesync": "^0.14.1"
   },
   "engines": {
     "node": "v20.11.1"
