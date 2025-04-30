@@ -79,7 +79,7 @@
     "prettier-plugin-sh": "^0.17.2",
     "snyk": "^1.1296.2",
     "sonar-scanner": "^3.1.0",
-    "sort-package-json": "^3.0.0",
+    "sort-package-json": "^3.1.0",
     "typesync": "^0.14.3"
   },
   "engines": {
