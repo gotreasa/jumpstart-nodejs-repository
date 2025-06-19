@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@main
       - uses: actions/setup-node@main
         with:
-          node-version: 20.11
+          node-version: 22.16
           cache: 'npm'
       - name: 🗂️ Get npm cache directory
         id: npm-cache-dir
@@ -53,7 +53,7 @@ jobs:
         uses: actions/checkout@main
       - uses: actions/setup-node@main
         with:
-          node-version: 20.11
+          node-version: 22.16
           cache: 'npm'
       - name: 🗂️ Get npm cache directory
         id: npm-cache-dir
@@ -70,7 +70,7 @@ jobs:
         uses: actions/checkout@main
       - uses: actions/setup-node@main
         with:
-          node-version: 20.11
+          node-version: 22.16
           cache: 'npm'
       - name: 🗂️ Get npm cache directory
         id: npm-cache-dir
@@ -87,7 +87,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@main
         with:
-          node-version: 20.11
+          node-version: 22.16
           cache: 'npm'
       - name: 🗂️ Get npm cache directory
         id: npm-cache-dir
@@ -123,7 +123,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@main
         with:
-          node-version: 20.11
+          node-version: 22.16
           cache: 'npm'
       - name: 🗂️ Get npm cache directory
         id: npm-cache-dir
