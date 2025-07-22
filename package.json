@@ -70,7 +70,7 @@
     "eslint-plugin-sonarjs": "^3.0.4",
     "globals": "^16.3.0",
     "husky": "^9.1.7",
-    "jest": "^30.0.4",
+    "jest": "^30.0.5",
     "jest-config": "^30.0.4",
     "jest-junit": "^16.0.0",
     "lint-staged": "^16.1.2",
