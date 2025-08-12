@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🛒 Check out to get the configuration file .github/auto-merge.yml
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 🤖 DependaBot AutoMerge
         uses: ahmadnassri/action-dependabot-auto-merge@master
