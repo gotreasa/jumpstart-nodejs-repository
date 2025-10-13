@@ -26,7 +26,7 @@ jobs:
         # Snyk can be used to break the build when it detects security issues.
         # In this case we want to upload the issues to GitHub Code Scanning
         continue-on-error: true
-        uses: snyk/actions/node@master
+        uses: snyk/actions/node@9adf32b1121593767fc3c057af55b55db032dc04
         env:
           # In order to use the Snyk Action you will need to have a Snyk API token.
           # More details in https://github.com/snyk/actions#getting-your-snyk-token
@@ -40,7 +40,7 @@ jobs:
         with:
           sarif_file: snyk.sarif
       - name: Test the code for security vulnerabilities
-        uses: snyk/actions/node@master
+        uses: snyk/actions/node@9adf32b1121593767fc3c057af55b55db032dc04
         continue-on-error: true # To make sure that SARIF upload gets called
         env:
           # In order to use the Snyk Action you will need to have a Snyk API token.
