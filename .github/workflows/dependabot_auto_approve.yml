@@ -16,7 +16,7 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Approve a PR
-        run: gh pr review --approve "$PR_URL"
+        run: gh pr review --approve "$PR_URL" && echo "${{ steps.metadata.outputs.update-type }}"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
