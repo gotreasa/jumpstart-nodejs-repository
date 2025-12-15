@@ -60,7 +60,7 @@
     "@types/prettier": "^3.0.0",
     "babel-jest": "^30.2.0",
     "env-cmd": "^11.0.0",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
