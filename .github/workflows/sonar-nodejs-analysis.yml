@@ -103,7 +103,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Test Report
-        uses: dorny/test-reporter@fe45e9537387dac839af0d33ba56eed8e24189e8
+        uses: dorny/test-reporter@e17be7e0078fc00f61965f3b4032f1e1fdc7fcfb
         if: success() || failure() # run this step even if previous step failed
         with:
           name: JEST Tests # Name of the check run which will be created
