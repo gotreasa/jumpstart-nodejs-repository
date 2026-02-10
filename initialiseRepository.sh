@@ -56,11 +56,11 @@ function getGitUserName() {
   while [ -z "$GIT_USER" ]; do
     echo "🙋‍♀️    What is your GitHub ID?"
     read GIT_USER
-    if [[ $(curl -L -s -o /dev/null -w "%{http_code}" http://github.com/$GIT_USER) != 200 ]]; then
-      echo "⛔️    That ID was not found at http://github.com/$GIT_USER"
+    if [[ $(curl -L -s -o /dev/null -w "%{http_code}" https://github.com/$GIT_USER) != 200 ]]; then
+      echo "⛔️    That ID was not found at https://github.com/$GIT_USER"
       unset GIT_USER
     else
-      echo "✅    Your ID was found at http://github.com/$GIT_USER"
+      echo "✅    Your ID was found at https://github.com/$GIT_USER"
     fi
   done
 }
@@ -105,9 +105,9 @@ function installLatestNodeAndNpmPackages() {
   sed -i '' 's/"node": ".*"/"node": "'${nodeVersion}'"/g' package.json
   # Install and update NPM packages
   echo "ℹ️    Setting up the npm packages"
-  npm i
+  npm i --ignore-scripts
   npx npm-check-updates -u
-  npm i
+  npm i --ignore-scripts
 }
 
 function updateRepositoryFiles() {
