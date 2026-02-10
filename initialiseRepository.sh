@@ -56,7 +56,7 @@ function getGitUserName() {
   while [ -z "$GIT_USER" ]; do
     echo "🙋‍♀️    What is your GitHub ID?"
     read GIT_USER
-    if [[ $(curl -L -o /dev/null -w "%{http_code}" https://github.com/$GIT_USER) != 200 ]]; then
+    if [[ $(curl -s -o /dev/null -w "%{http_code}" https://github.com/$GIT_USER) != 200 ]]; then
       echo "⛔️    That ID was not found at https://github.com/$GIT_USER"
       unset GIT_USER
     else
@@ -72,7 +72,7 @@ function getGitOrganisation() {
     if [ -z "$GIT_ORG" ]; then
       GIT_ORG=$GIT_USER
     fi
-    if [[ $(curl -L -o /dev/null -w "%{http_code}" https://github.com/$GIT_ORG) != 200 ]]; then
+    if [[ $(curl -s -o /dev/null -w "%{http_code}" https://github.com/$GIT_ORG) != 200 ]]; then
       echo "⛔️    That Organisation was not found at https://github.com/$GIT_ORG"
       unset GIT_ORG
     else
