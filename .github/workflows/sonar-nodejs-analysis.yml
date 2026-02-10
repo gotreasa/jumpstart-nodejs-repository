@@ -33,7 +33,7 @@ jobs:
         id: npm-cache-dir
         shell: bash
         run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - name: Lint the code
         run: npm run lint:verify --
           --format @microsoft/eslint-formatter-sarif
@@ -59,7 +59,7 @@ jobs:
         id: npm-cache-dir
         shell: bash
         run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - name: Prettify the code
         run: npm run prettier:verify
 
@@ -76,7 +76,7 @@ jobs:
         id: npm-cache-dir
         shell: bash
         run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - name: Detect any secrets in the code
         run: npm run detect-secrets $(git ls-files)
 
@@ -93,7 +93,7 @@ jobs:
         id: npm-cache-dir
         shell: bash
         run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - name: Run Tests
         run: npm test
       - name: SonarCloud Scan
@@ -130,6 +130,6 @@ jobs:
         id: npm-cache-dir
         shell: bash
         run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - name: Run Tests
         run: npm run test:mutation
