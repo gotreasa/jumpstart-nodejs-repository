@@ -72,11 +72,11 @@ function getGitOrganisation() {
     if [ -z "$GIT_ORG" ]; then
       GIT_ORG=$GIT_USER
     fi
-    if [[ $(curl -L -s -o /dev/null -w "%{http_code}" http://github.com/$GIT_ORG) != 200 ]]; then
-      echo "⛔️    That Organisation was not found at http://github.com/$GIT_ORG"
+    if [[ $(curl -L -s -o /dev/null -w "%{http_code}" https://github.com/$GIT_ORG) != 200 ]]; then
+      echo "⛔️    That Organisation was not found at https://github.com/$GIT_ORG"
       unset GIT_ORG
     else
-      echo "✅    Your Organisation was found at http://github.com/$GIT_ORG"
+      echo "✅    Your Organisation was found at https://github.com/$GIT_ORG"
     fi
   done
 }
