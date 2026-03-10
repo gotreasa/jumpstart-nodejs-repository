@@ -133,3 +133,29 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Run Tests
         run: npm run test:mutation
+
+  # ============================================================
+  # Dependabot auto-merge (consolidated — no separate workflow)
+  # ============================================================
+
+  dependabot_auto_merge:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    needs: [eslint-verify, prettier-verify, test_and_coverage, mutation_test]
+    permissions:
+      contents: write
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+
+      - name: Auto-merge patch and minor updates
+        if: >-
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
