@@ -61,9 +61,9 @@ function install_nvm() {
 }
 
 function get_repository_name() {
-  while [[ -z "$repositoryName" ]]; do
+  while [[ -z "$repository_name" ]]; do
     echo -e "\n\n🙋‍♀️    What is the name of the repository you need?"
-    read repositoryName
+    read repository_name
   done
   return 0
 }
@@ -102,12 +102,12 @@ function get_git_organisation() {
 function clone_template_repository() {
   echo "ℹ️    Creating the repository"
   if [[ $GIT_USER == $GIT_ORG ]]; then
-    fullRepositoryName=${repositoryName}
+    full_repository_name=${repository_name}
   else
-    fullRepositoryName=$GIT_ORG/${repositoryName}
+    full_repository_name=$GIT_ORG/${repository_name}
   fi
-  gh repo create $fullRepositoryName --public --confirm --template="gotreasa/templateRepository"
-  cd $repositoryName
+  gh repo create $full_repository_name --public --confirm --template="gotreasa/templateRepository"
+  cd $repository_name
   while [[ "$(git branch -a | grep remotes/origin/main)" != *"remotes/origin/main" ]]; do
     git fetch origin
   done
@@ -119,9 +119,9 @@ function install_latest_node_and_npm_packages() {
   # Setup NVM and Node version
   echo "ℹ️    Installing node"
   nvm install --lts
-  nodeVersion=$(nvm version)
-  echo $nodeVersion > .nvmrc
-  sed_in_place 's/"node": ".*"/"node": "'${nodeVersion}'"/g' package.json
+  node_version=$(nvm version)
+  echo $node_version > .nvmrc
+  sed_in_place 's/"node": ".*"/"node": "'${node_version}'"/g' package.json
   # Install and update NPM packages
   echo "ℹ️    Setting up the npm packages"
   npm i --ignore-scripts
@@ -132,21 +132,21 @@ function install_latest_node_and_npm_packages() {
 
 function update_repository_files() {
   sed_in_place 's/gotreasa/'${GIT_ORG}'/g' package.json
-  sed_in_place 's/templateRepository/'${repositoryName}'/g' package.json
-  sed_in_place 's/node-version: \[14.15.1\]/node-version: \['${nodeVersion}'\]/g' .github/workflows/node.js.yml
+  sed_in_place 's/templateRepository/'${repository_name}'/g' package.json
+  sed_in_place 's/node-version: \[14.15.1\]/node-version: \['${node_version}'\]/g' .github/workflows/node.js.yml
   return 0
 }
 
 function setup_sonar() {
-  projectName=${GIT_ORG}_${repositoryName}
-  projectOrganisation=${GIT_USER}
-  projectKey=${projectOrganisation}_${projectName}
+  project_name=${GIT_ORG}_${repository_name}
+  project_organisation=${GIT_USER}
+  project_key=${project_organisation}_${project_name}
   echo "ℹ️    Updating sonar properties file"
-  sed_in_place 's/sonar.organization=gotreasa/sonar.organization='${projectOrganisation}'/g' sonar-project.properties
-  sed_in_place 's/sonar.projectKey=gotreasa_templateRepository/sonar.projectKey='${projectKey}'/g' sonar-project.properties
-  sed_in_place 's#sonar.links.scm=https://github.com/gotreasa/templateRepository#sonar.links.scm=https://github.com/'${GIT_ORG}'/'${repositoryName}'#g' sonar-project.properties
-  sed_in_place 's#https://sonarcloud.io/dashboard?id=gotreasa_templateRepository#https://sonarcloud.io/dashboard?id='${projectKey}'#g' README.md
-  sed_in_place 's#https://sonarcloud.io/api/project_badges/measure?project=gotreasa_templateRepository#https://sonarcloud.io/api/project_badges/measure?project='${projectKey}'#g' README.md
+  sed_in_place 's/sonar.organization=gotreasa/sonar.organization='${project_organisation}'/g' sonar-project.properties
+  sed_in_place 's/sonar.projectKey=gotreasa_templateRepository/sonar.projectKey='${project_key}'/g' sonar-project.properties
+  sed_in_place 's#sonar.links.scm=https://github.com/gotreasa/templateRepository#sonar.links.scm=https://github.com/'${GIT_ORG}'/'${repository_name}'#g' sonar-project.properties
+  sed_in_place 's#https://sonarcloud.io/dashboard?id=gotreasa_templateRepository#https://sonarcloud.io/dashboard?id='${project_key}'#g' README.md
+  sed_in_place 's#https://sonarcloud.io/api/project_badges/measure?project=gotreasa_templateRepository#https://sonarcloud.io/api/project_badges/measure?project='${project_key}'#g' README.md
 
   while [[ -z "$SONAR_SECRET" ]]; do
     echo -e "\n\nWhat is the sonar API key?"
@@ -158,7 +158,7 @@ function setup_sonar() {
     --request POST \
     --header "Content-Type: application/x-www-form-urlencoded" \
     -u ${SONAR_SECRET}: \
-    -d "project=${projectKey}&organization=${projectOrganisation}&name=${projectName}" \
+    -d "project=${project_key}&organization=${project_organisation}&name=${project_name}" \
     'https://sonarcloud.io/api/projects/create'
   return 0
 }
@@ -168,8 +168,8 @@ function setup_snyk() {
     echo -e "\n\nWhat is the synk API key?"
     read -s SNYK_SECRET
   done
-  sed_in_place 's#https://snyk.io/test/github/gotreasa/templateRepository/badge.svg#https://snyk.io/test/github/'${GIT_ORG}'/'${repositoryName}'/badge.svg#g' README.md
-  sed_in_place 's#https://snyk.io/test/github/gotreasa/templateRepository#https://snyk.io/test/github/'${GIT_ORG}'/'${repositoryName}'#g' README.md
+  sed_in_place 's#https://snyk.io/test/github/gotreasa/templateRepository/badge.svg#https://snyk.io/test/github/'${GIT_ORG}'/'${repository_name}'/badge.svg#g' README.md
+  sed_in_place 's#https://snyk.io/test/github/gotreasa/templateRepository#https://snyk.io/test/github/'${GIT_ORG}'/'${repository_name}'#g' README.md
   gh secret set SNYK_TOKEN -b ${SNYK_SECRET}
   return 0
 }
@@ -194,7 +194,7 @@ function commit_code_to_git() {
 }
 
 function print_success_message() {
-  echo "ℹ️    Repository setup for ${repositoryName} is now complete"
+  echo "ℹ️    Repository setup for ${repository_name} is now complete"
   return 0
 }
 

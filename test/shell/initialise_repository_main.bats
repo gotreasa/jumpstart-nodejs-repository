@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-# End-to-end tests of initialiseRepository.sh's main(), with every external
+# End-to-end tests of initialise_repository.sh's main(), with every external
 # command (gh, git, curl, brew, npm, npx, nvm) replaced by a stub on PATH that
 # records its arguments. No repository is created, no secret is set, nothing
 # is pushed.
@@ -12,7 +12,7 @@
 load '../../node_modules/bats-support/load'
 load '../../node_modules/bats-assert/load'
 
-SCRIPT="${BATS_TEST_DIRNAME}/../../initialiseRepository.sh"
+SCRIPT="${BATS_TEST_DIRNAME}/../../initialise_repository.sh"
 
 stub() {
   local name="$1"
@@ -59,8 +59,8 @@ nvm() {
 EOF
   export PATH="${BIN}:${PATH}"
   cd "$WORK"
-  unset repositoryName GIT_USER GIT_ORG SONAR_SECRET SNYK_SECRET
-  # shellcheck source=../../initialiseRepository.sh
+  unset repository_name GIT_USER GIT_ORG SONAR_SECRET SNYK_SECRET
+  # shellcheck source=../../initialise_repository.sh
   source "$SCRIPT"
 }
 

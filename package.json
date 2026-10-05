@@ -27,7 +27,7 @@
     "test": "jest",
     "test:mutation": "npx stryker run",
     "test:shell": "bats test/shell",
-    "test:shell:coverage": "rm -rf coverage/shell && docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD:$PWD\" -w \"$PWD\" kcov/kcov@sha256:481289ae32e55e5b733019515acd10948a4f76dfed381765577db909664fc603 kcov --include-path=\"$PWD/initialiseRepository.sh\" coverage/shell node_modules/.bin/bats test/shell && cp coverage/shell/bats.*/sonarqube.xml coverage/shell-sonarqube.xml",
+    "test:shell:coverage": "rm -rf coverage/shell && docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD:$PWD\" -w \"$PWD\" kcov/kcov@sha256:481289ae32e55e5b733019515acd10948a4f76dfed381765577db909664fc603 kcov --include-path=\"$PWD/initialise_repository.sh\" coverage/shell node_modules/.bin/bats test/shell && cp coverage/shell/bats.*/sonarqube.xml coverage/shell-sonarqube.xml",
     "test:sonar": "npm test && env-cmd sonar-scanner",
     "test:watch": "npm run test -- --watch"
   },
