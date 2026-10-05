@@ -133,7 +133,7 @@ function install_latest_node_and_npm_packages() {
 function update_repository_files() {
   sed_in_place 's/gotreasa/'${GIT_ORG}'/g' package.json
   sed_in_place 's/templateRepository/'${repository_name}'/g' package.json
-  sed_in_place 's/node-version: \[14.15.1\]/node-version: \['${node_version}'\]/g' .github/workflows/node.js.yml
+  sed_in_place 's/node-version: \[[^]]*\]/node-version: \['${node_version}'\]/g' .github/workflows/node.js.yml
   return 0
 }
 
