@@ -4,6 +4,14 @@ updates:
     directory: '/'
     schedule:
       interval: 'daily'
+    # Packages that pin or peer each other must move in one PR
+    groups:
+      babel:
+        patterns:
+          - '@babel/*'
+      stryker:
+        patterns:
+          - '@stryker-mutator/*'
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
