@@ -4,7 +4,8 @@ updates:
     directory: '/'
     schedule:
       interval: 'daily'
-    # Packages that pin or peer each other must move in one PR
+    # A dependency joins the first group it matches, so tool families
+    # (whose packages pin or peer each other) come before the catch-all
     groups:
       babel:
         patterns:
@@ -12,7 +13,40 @@ updates:
       stryker:
         patterns:
           - '@stryker-mutator/*'
+      commitlint:
+        patterns:
+          - '@commitlint/*'
+      jest:
+        patterns:
+          - 'jest'
+          - 'jest-config'
+          - 'babel-jest'
+      bats:
+        patterns:
+          - 'bats'
+          - 'bats-*'
+      lint-and-format:
+        patterns:
+          - 'eslint'
+          - '@eslint/*'
+          - 'eslint-*'
+          - 'globals'
+          - 'prettier'
+          - 'prettier-*'
+      minor-and-patch:
+        patterns:
+          - '*'
+        update-types:
+          - 'minor'
+          - 'patch'
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
       interval: 'daily'
+    groups:
+      minor-and-patch:
+        patterns:
+          - '*'
+        update-types:
+          - 'minor'
+          - 'patch'
