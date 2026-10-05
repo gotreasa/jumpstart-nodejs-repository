@@ -1,1 +1,8 @@
-node-version: [18.16.1]
+strategy:
+  matrix:
+    node-version: [18.16.1]
+steps:
+  - name: Use Node.js ${{ matrix.node-version }}
+    uses: actions/setup-node@v1
+    with:
+      node-version: ${{ matrix.node-version }}
