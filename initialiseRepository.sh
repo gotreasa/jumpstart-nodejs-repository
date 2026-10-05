@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# In-place sed for both BSD (macOS) and GNU (Linux), leaving no backup behind
+function sed_in_place() {
+  local expression="$1"
+  local file="$2"
+  if ! sed -i.bak "$expression" "$file"; then
+    return 1
+  fi
+  rm -f "$file.bak"
+  return 0
+}
+
 function load_config_from_file() {
   if [[ -f .templateRepositoryConfig ]]; then
     . .templateRepositoryConfig
@@ -110,7 +121,7 @@ function install_latest_node_and_npm_packages() {
   nvm install --lts
   nodeVersion=$(nvm version)
   echo $nodeVersion > .nvmrc
-  sed -i '' 's/"node": ".*"/"node": "'${nodeVersion}'"/g' package.json
+  sed_in_place 's/"node": ".*"/"node": "'${nodeVersion}'"/g' package.json
   # Install and update NPM packages
   echo "ℹ️    Setting up the npm packages"
   npm i --ignore-scripts
@@ -120,9 +131,9 @@ function install_latest_node_and_npm_packages() {
 }
 
 function update_repository_files() {
-  sed -i '' 's/gotreasa/'${GIT_ORG}'/g' package.json
-  sed -i '' 's/templateRepository/'${repositoryName}'/g' package.json
-  sed -i '' 's/node-version: \[14.15.1\]/node-version: \['${nodeVersion}'\]/g' .github/workflows/node.js.yml
+  sed_in_place 's/gotreasa/'${GIT_ORG}'/g' package.json
+  sed_in_place 's/templateRepository/'${repositoryName}'/g' package.json
+  sed_in_place 's/node-version: \[14.15.1\]/node-version: \['${nodeVersion}'\]/g' .github/workflows/node.js.yml
   return 0
 }
 
@@ -131,11 +142,11 @@ function setup_sonar() {
   projectOrganisation=${GIT_USER}
   projectKey=${projectOrganisation}_${projectName}
   echo "ℹ️    Updating sonar properties file"
-  sed -i '' 's/sonar.organization=gotreasa/sonar.organization='${projectOrganisation}'/g' sonar-project.properties
-  sed -i '' 's/sonar.projectKey=gotreasa_templateRepository/sonar.projectKey='${projectKey}'/g' sonar-project.properties
-  sed -i '' 's#sonar.links.scm=https://github.com/gotreasa/templateRepository#sonar.links.scm=https://github.com/'${GIT_ORG}'/'${repositoryName}'#g' sonar-project.properties
-  sed -i '' 's#https://sonarcloud.io/dashboard?id=gotreasa_templateRepository#https://sonarcloud.io/dashboard?id='${projectKey}'#g' README.md
-  sed -i '' 's#https://sonarcloud.io/api/project_badges/measure?project=gotreasa_templateRepository#https://sonarcloud.io/api/project_badges/measure?project='${projectKey}'#g' README.md
+  sed_in_place 's/sonar.organization=gotreasa/sonar.organization='${projectOrganisation}'/g' sonar-project.properties
+  sed_in_place 's/sonar.projectKey=gotreasa_templateRepository/sonar.projectKey='${projectKey}'/g' sonar-project.properties
+  sed_in_place 's#sonar.links.scm=https://github.com/gotreasa/templateRepository#sonar.links.scm=https://github.com/'${GIT_ORG}'/'${repositoryName}'#g' sonar-project.properties
+  sed_in_place 's#https://sonarcloud.io/dashboard?id=gotreasa_templateRepository#https://sonarcloud.io/dashboard?id='${projectKey}'#g' README.md
+  sed_in_place 's#https://sonarcloud.io/api/project_badges/measure?project=gotreasa_templateRepository#https://sonarcloud.io/api/project_badges/measure?project='${projectKey}'#g' README.md
 
   while [[ -z "$SONAR_SECRET" ]]; do
     echo -e "\n\nWhat is the sonar API key?"
@@ -157,8 +168,8 @@ function setup_snyk() {
     echo -e "\n\nWhat is the synk API key?"
     read -s SNYK_SECRET
   done
-  sed -i '' 's#https://snyk.io/test/github/gotreasa/templateRepository/badge.svg#https://snyk.io/test/github/'${GIT_ORG}'/'${repositoryName}'/badge.svg#g' README.md
-  sed -i '' 's#https://snyk.io/test/github/gotreasa/templateRepository#https://snyk.io/test/github/'${GIT_ORG}'/'${repositoryName}'#g' README.md
+  sed_in_place 's#https://snyk.io/test/github/gotreasa/templateRepository/badge.svg#https://snyk.io/test/github/'${GIT_ORG}'/'${repositoryName}'/badge.svg#g' README.md
+  sed_in_place 's#https://snyk.io/test/github/gotreasa/templateRepository#https://snyk.io/test/github/'${GIT_ORG}'/'${repositoryName}'#g' README.md
   gh secret set SNYK_TOKEN -b ${SNYK_SECRET}
   return 0
 }

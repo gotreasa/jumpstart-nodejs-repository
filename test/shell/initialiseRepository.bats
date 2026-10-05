@@ -212,6 +212,21 @@ EOF
   assert_equal "$(cat .github/workflows/node.js.yml)" 'node-version: [v22.23.3]'
 }
 
+@test "sed_in_place reports failure when sed cannot edit the file" {
+  run sed_in_place 's/a/b/' missing-file
+  assert_failure 1
+}
+
+@test "update_repository_files leaves no sed backup files to be committed" {
+  mkdir -p .github/workflows
+  echo '"url": "gotreasa/templateRepository"' > package.json
+  echo 'node-version: [14.15.1]' > .github/workflows/node.js.yml
+  GIT_ORG="acme" repositoryName="widget" nodeVersion="v22.23.3"
+  update_repository_files
+  run find . -name '*.bak'
+  assert_output ""
+}
+
 @test "setup_sonar rewrites the Sonar settings, stores the token and creates the project" {
   gh() { record "gh $*"; }
   curl() { record "curl $*"; }
