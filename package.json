@@ -45,13 +45,15 @@
     ]
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.29.7",
+    "@babel/core": "^8.0.6",
+    "@babel/preset-env": "^8.0.6",
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.3",
     "@eslint/js": "^10.0.1",
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
-    "@stryker-mutator/core": "^9.5.1",
-    "@stryker-mutator/jest-runner": "^9.6.1",
+    "@stryker-mutator/core": "^10.0.0",
+    "@stryker-mutator/jest-runner": "^10.0.0",
+    "@types/babel__core": "~7.20.5",
     "@types/babel__preset-env": "~7.10.0",
     "@types/eslint": "^9.6.1",
     "@types/eslint-config-prettier": "~6.11.3",
@@ -83,6 +85,6 @@
     "typesync": "^0.14.3"
   },
   "engines": {
-    "node": "v22.16.0"
+    "node": "v22.23.3"
   }
 }
