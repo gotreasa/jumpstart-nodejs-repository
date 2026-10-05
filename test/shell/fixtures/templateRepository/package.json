@@ -1,0 +1,11 @@
+{
+  "name": "templateRepository",
+  "homepage": "https://github.com/gotreasa/templateRepository#readme",
+  "repository": {
+    "url": "git+https://github.com/gotreasa/templateRepository.git"
+  },
+  "main": "src/templateRepository.js",
+  "engines": {
+    "node": "v18.16.1"
+  }
+}

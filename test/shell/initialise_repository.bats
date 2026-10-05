@@ -1,20 +1,20 @@
 #!/usr/bin/env bats
 
-# Characterisation tests for initialiseRepository.sh.
+# Characterisation tests for initialise_repository.sh.
 # External commands are stubbed as shell functions that record their
 # arguments in $CALLS, so nothing touches GitHub, SonarCloud or brew.
 
 load '../../node_modules/bats-support/load'
 load '../../node_modules/bats-assert/load'
 
-SCRIPT="${BATS_TEST_DIRNAME}/../../initialiseRepository.sh"
+SCRIPT="${BATS_TEST_DIRNAME}/../../initialise_repository.sh"
 
 setup() {
   CALLS="${BATS_TEST_TMPDIR}/calls"
   : > "$CALLS"
   cd "$BATS_TEST_TMPDIR"
-  unset repositoryName GIT_USER GIT_ORG SONAR_SECRET SNYK_SECRET
-  # shellcheck source=../../initialiseRepository.sh
+  unset repository_name GIT_USER GIT_ORG SONAR_SECRET SNYK_SECRET
+  # shellcheck source=../../initialise_repository.sh
   source "$SCRIPT"
 }
 
@@ -114,7 +114,7 @@ github_has() {
 
 @test "get_repository_name asks again until a name is given" {
   get_repository_name <<< $'\n\nmy-repo' > "${BATS_TEST_TMPDIR}/out"
-  assert_equal "$repositoryName" "my-repo"
+  assert_equal "$repository_name" "my-repo"
   run grep -c "What is the name of the repository you need?" "${BATS_TEST_TMPDIR}/out"
   assert_output "3"
 }
@@ -162,7 +162,7 @@ git_with_main_after_one_fetch() {
   gh() { record "gh $*"; }
   git_with_main_after_one_fetch
   mkdir my-repo
-  GIT_USER="me" GIT_ORG="me" repositoryName="my-repo"
+  GIT_USER="me" GIT_ORG="me" repository_name="my-repo"
   clone_template_repository > /dev/null
   assert_equal "$(basename "$PWD")" "my-repo"
   run cat "$CALLS"
@@ -177,7 +177,7 @@ EOF
   gh() { record "gh $*"; }
   git_with_main_after_one_fetch
   mkdir my-repo
-  GIT_USER="me" GIT_ORG="my-org" repositoryName="my-repo"
+  GIT_USER="me" GIT_ORG="my-org" repository_name="my-repo"
   clone_template_repository > /dev/null
   run head -1 "$CALLS"
   assert_output "gh repo create my-org/my-repo --public --confirm --template=gotreasa/templateRepository"
@@ -206,10 +206,25 @@ EOF
   mkdir -p .github/workflows
   echo '"url": "gotreasa/templateRepository"' > package.json
   echo 'node-version: [14.15.1]' > .github/workflows/node.js.yml
-  GIT_ORG="acme" repositoryName="widget" nodeVersion="v22.23.3"
+  GIT_ORG="acme" repository_name="widget" node_version="v22.23.3"
   update_repository_files
   assert_equal "$(cat package.json)" '"url": "acme/widget"'
   assert_equal "$(cat .github/workflows/node.js.yml)" 'node-version: [v22.23.3]'
+}
+
+@test "sed_in_place reports failure when sed cannot edit the file" {
+  run sed_in_place 's/a/b/' missing-file
+  assert_failure 1
+}
+
+@test "update_repository_files leaves no sed backup files to be committed" {
+  mkdir -p .github/workflows
+  echo '"url": "gotreasa/templateRepository"' > package.json
+  echo 'node-version: [14.15.1]' > .github/workflows/node.js.yml
+  GIT_ORG="acme" repository_name="widget" node_version="v22.23.3"
+  update_repository_files
+  run find . -name '*.bak'
+  assert_output ""
 }
 
 @test "setup_sonar rewrites the Sonar settings, stores the token and creates the project" {
@@ -224,7 +239,7 @@ EOF
 https://sonarcloud.io/dashboard?id=gotreasa_templateRepository
 https://sonarcloud.io/api/project_badges/measure?project=gotreasa_templateRepository
 EOF
-  GIT_USER="me" GIT_ORG="acme" repositoryName="widget"
+  GIT_USER="me" GIT_ORG="acme" repository_name="widget"
   SONAR_SECRET="fake-sonar-token" # pragma: allowlist secret
   setup_sonar > /dev/null
   run cat sonar-project.properties
@@ -247,7 +262,7 @@ EOF
   gh() { record "gh $*"; }
   curl() { :; }
   touch sonar-project.properties README.md
-  GIT_USER="me" GIT_ORG="acme" repositoryName="widget"
+  GIT_USER="me" GIT_ORG="acme" repository_name="widget"
   setup_sonar <<< $'\nentered-token' > /dev/null
   run grep "SONAR_TOKEN" "$CALLS"
   assert_output "gh secret set SONAR_TOKEN -b entered-token"
@@ -259,7 +274,7 @@ EOF
 https://snyk.io/test/github/gotreasa/templateRepository/badge.svg
 https://snyk.io/test/github/gotreasa/templateRepository
 EOF
-  GIT_ORG="acme" repositoryName="widget"
+  GIT_ORG="acme" repository_name="widget"
   setup_snyk <<< $'\nentered-snyk-token' > /dev/null
   run cat README.md
   assert_output - << 'EOF'
@@ -296,7 +311,7 @@ EOF
 }
 
 @test "print_success_message names the repository" {
-  repositoryName="widget"
+  repository_name="widget"
   run print_success_message
   assert_output "ℹ️    Repository setup for widget is now complete"
 }
