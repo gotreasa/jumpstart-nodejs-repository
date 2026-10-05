@@ -205,7 +205,7 @@ EOF
 @test "update_repository_files points package.json and the workflow at the new repository" {
   mkdir -p .github/workflows
   echo '"url": "gotreasa/templateRepository"' > package.json
-  echo 'node-version: [14.15.1]' > .github/workflows/node.js.yml
+  echo 'node-version: [18.16.1]' > .github/workflows/node.js.yml
   GIT_ORG="acme" repository_name="widget" node_version="v22.23.3"
   update_repository_files
   assert_equal "$(cat package.json)" '"url": "acme/widget"'
@@ -220,7 +220,7 @@ EOF
 @test "update_repository_files leaves no sed backup files to be committed" {
   mkdir -p .github/workflows
   echo '"url": "gotreasa/templateRepository"' > package.json
-  echo 'node-version: [14.15.1]' > .github/workflows/node.js.yml
+  echo 'node-version: [18.16.1]' > .github/workflows/node.js.yml
   GIT_ORG="acme" repository_name="widget" node_version="v22.23.3"
   update_repository_files
   run find . -name '*.bak'

@@ -116,6 +116,17 @@ EOF
   }
 }
 EOF
+  run cat .github/workflows/node.js.yml
+  assert_output - << 'EOF'
+strategy:
+  matrix:
+    node-version: [v22.23.3]
+steps:
+  - name: Use Node.js ${{ matrix.node-version }}
+    uses: actions/setup-node@v1
+    with:
+      node-version: ${{ matrix.node-version }}
+EOF
   run cat sonar-project.properties
   assert_output - << 'EOF'
 sonar.links.scm=https://github.com/my-org/my-repo
