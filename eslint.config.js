@@ -5,6 +5,8 @@ import jest from 'eslint-plugin-jest';
 import sonarjs from 'eslint-plugin-sonarjs';
 
 export default [
+  // Generated reports (Jest, kcov) are not source
+  { ignores: ['coverage/'] },
   js.configs.recommended,
   {
     files: ['**/*.js'],
