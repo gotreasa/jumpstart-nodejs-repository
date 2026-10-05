@@ -106,11 +106,11 @@ EOF
   assert_output - << 'EOF'
 {
   "name": "my-repo",
-  "main": "src/my-repo.js",
+  "homepage": "https://github.com/my-org/my-repo#readme",
   "repository": {
     "url": "git+https://github.com/my-org/my-repo.git"
   },
-  "homepage": "https://github.com/my-org/my-repo#readme",
+  "main": "src/my-repo.js",
   "engines": {
     "node": "v22.23.3"
   }
