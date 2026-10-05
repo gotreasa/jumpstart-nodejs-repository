@@ -159,7 +159,14 @@ jobs:
   dependabot_auto_merge:
     if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
-    needs: [eslint-verify, prettier-verify, test_and_coverage, mutation_test]
+    needs:
+      [
+        eslint-verify,
+        prettier-verify,
+        test_and_coverage,
+        mutation_test,
+        shell_test,
+      ]
     permissions:
       contents: write
     steps:
@@ -169,10 +176,15 @@ jobs:
         with:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
 
-      - name: Auto-merge patch and minor updates
+      # Majors merge only for groups (see dependabot.yml) whose tools the
+      # jobs above exercise; other majors still wait for a review
+      - name: Auto-merge patch, minor and CI-exercised major updates
         if: >-
           steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
-          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+          steps.metadata.outputs.update-type == 'version-update:semver-minor' ||
+          (steps.metadata.outputs.update-type == 'version-update:semver-major' &&
+          contains(fromJSON('["babel", "stryker", "jest", "bats", "lint-and-format"]'),
+          steps.metadata.outputs.dependency-group))
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
