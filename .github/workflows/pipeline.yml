@@ -134,6 +134,24 @@ jobs:
       - name: Run Tests
         run: npm run test:mutation
 
+  shell_test:
+    # initialiseRepository.sh targets macOS (brew, BSD sed -i '')
+    runs-on: macos-latest
+    needs: [eslint-verify, prettier-verify, detect-secrets]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@main
+        with:
+          node-version: 22.23
+          cache: 'npm'
+      - name: 🗂️ Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+      - run: npm ci --ignore-scripts
+      - name: Run Shell Tests
+        run: npm run test:shell
+
   # ============================================================
   # Dependabot auto-merge (consolidated — no separate workflow)
   # ============================================================

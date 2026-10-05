@@ -172,20 +172,27 @@ function printSuccessMessage() {
   echo "ℹ️    Repository setup for ${repositoryName} is now complete"
 }
 
-loadConfigFromFile
-installPackage "git"
-installPackage "gh"
-installPackage "curl"
-installNvm
-getRepositoryName
-getGitUserName
-exit
-getGitOrganisation
-cloneTemplateRepository
-installLatestNodeAndNpmPackages
-updateRepositoryFiles
-setupSonar
-setupSnyk
-saveConfigToFile
-commitCodeToGit
-printSuccessMessage
+function main() {
+  loadConfigFromFile
+  installPackage "git"
+  installPackage "gh"
+  installPackage "curl"
+  installNvm
+  getRepositoryName
+  getGitUserName
+  exit
+  getGitOrganisation
+  cloneTemplateRepository
+  installLatestNodeAndNpmPackages
+  updateRepositoryFiles
+  setupSonar
+  setupSnyk
+  saveConfigToFile
+  commitCodeToGit
+  printSuccessMessage
+}
+
+# Run only when executed, so tests can source the functions
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  main "$@"
+fi

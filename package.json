@@ -26,6 +26,7 @@
     "prettier:verify": "prettier --check \"*.{css,js,json,md,sh,yaml,yml}\"",
     "test": "jest",
     "test:mutation": "npx stryker run",
+    "test:shell": "bats test/shell",
     "test:sonar": "npm test && env-cmd sonar-scanner",
     "test:watch": "npm run test -- --watch"
   },
@@ -61,6 +62,9 @@
     "@types/lint-staged": "~14.0.0",
     "@types/prettier": "^3.0.0",
     "babel-jest": "^30.5.1",
+    "bats": "^1.13.0",
+    "bats-assert": "^2.2.4",
+    "bats-support": "^0.3.0",
     "env-cmd": "^11.0.0",
     "eslint": "^10.10.0",
     "eslint-config-airbnb": "^19.0.4",
