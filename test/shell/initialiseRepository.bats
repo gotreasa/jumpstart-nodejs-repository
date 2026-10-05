@@ -38,30 +38,30 @@ github_has() {
   assert_output "sourced"
 }
 
-@test "loadConfigFromFile loads an existing configuration" {
+@test "load_config_from_file loads an existing configuration" {
   echo "GIT_USER=from-config" > .templateRepositoryConfig
-  loadConfigFromFile > "${BATS_TEST_TMPDIR}/out"
+  load_config_from_file > "${BATS_TEST_TMPDIR}/out"
   assert_equal "$GIT_USER" "from-config"
   run cat "${BATS_TEST_TMPDIR}/out"
   assert_output "✅    Loaded existing configuration"
 }
 
-@test "loadConfigFromFile falls back to interactive mode without a configuration" {
-  run loadConfigFromFile
+@test "load_config_from_file falls back to interactive mode without a configuration" {
+  run load_config_from_file
   assert_success
   assert_output "ℹ️    No configuration found, using interactive mode"
 }
 
-@test "installPackage accepts a command that is already available" {
-  run installPackage "bash"
+@test "install_package accepts a command that is already available" {
+  run install_package "bash"
   assert_success
   assert_output "✅    All good with bash"
 }
 
-@test "installPackage installs a missing command with brew on macOS" {
+@test "install_package installs a missing command with brew on macOS" {
   uname() { echo "Darwin"; }
   brew() { record "brew $*"; }
-  run installPackage "not-a-real-command"
+  run install_package "not-a-real-command"
   assert_success
   assert_line "ℹ️    Installing not-a-real-command"
   assert_line "✅    not-a-real-command installed successfully"
@@ -69,76 +69,76 @@ github_has() {
   assert_output "brew install not-a-real-command"
 }
 
-@test "installPackage stops when brew fails to install" {
+@test "install_package stops when brew fails to install" {
   uname() { echo "Darwin"; }
   brew() { return 1; }
-  run installPackage "not-a-real-command"
+  run install_package "not-a-real-command"
   assert_failure 1
   assert_line "⛔️    There was an problem installing not-a-real-command"
 }
 
-@test "installPackage stops when a command is missing outside macOS" {
+@test "install_package stops when a command is missing outside macOS" {
   uname() { echo "Linux"; }
-  run installPackage "not-a-real-command"
+  run install_package "not-a-real-command"
   assert_failure 1
   assert_output "⛔️    not-a-real-command needs to be installed"
 }
 
-@test "installNvm loads nvm from the default NVM_DIR" {
+@test "install_nvm loads nvm from the default NVM_DIR" {
   export HOME="$BATS_TEST_TMPDIR"
   unset XDG_CONFIG_HOME
   mkdir -p "$HOME/.nvm"
   echo 'nvm() { :; }' > "$HOME/.nvm/nvm.sh"
-  run installNvm
+  run install_nvm
   assert_success
   assert_output "✅    All good with NVM"
 }
 
-@test "installNvm uses XDG_CONFIG_HOME when it is set" {
+@test "install_nvm uses XDG_CONFIG_HOME when it is set" {
   export HOME="${BATS_TEST_TMPDIR}/home"
   export XDG_CONFIG_HOME="${BATS_TEST_TMPDIR}/xdg"
   mkdir -p "$XDG_CONFIG_HOME/nvm"
   echo 'nvm() { :; }' > "$XDG_CONFIG_HOME/nvm/nvm.sh"
-  run installNvm
+  run install_nvm
   assert_success
   assert_output "✅    All good with NVM"
 }
 
-@test "installNvm stops when nvm is not installed" {
+@test "install_nvm stops when nvm is not installed" {
   export HOME="$BATS_TEST_TMPDIR"
   unset XDG_CONFIG_HOME
-  run installNvm
+  run install_nvm
   assert_failure 1
   assert_output "⛔️    NVM needs to be installed"
 }
 
-@test "getRepositoryName asks again until a name is given" {
-  getRepositoryName <<< $'\n\nmy-repo' > "${BATS_TEST_TMPDIR}/out"
+@test "get_repository_name asks again until a name is given" {
+  get_repository_name <<< $'\n\nmy-repo' > "${BATS_TEST_TMPDIR}/out"
   assert_equal "$repositoryName" "my-repo"
   run grep -c "What is the name of the repository you need?" "${BATS_TEST_TMPDIR}/out"
   assert_output "3"
 }
 
-@test "getGitUserName asks again until the ID exists on GitHub" {
+@test "get_git_user_name asks again until the ID exists on GitHub" {
   github_has "real-user"
-  getGitUserName <<< $'ghost\nreal-user' > "${BATS_TEST_TMPDIR}/out"
+  get_git_user_name <<< $'ghost\nreal-user' > "${BATS_TEST_TMPDIR}/out"
   assert_equal "$GIT_USER" "real-user"
   run cat "${BATS_TEST_TMPDIR}/out"
   assert_line "⛔️    That ID was not found at https://github.com/ghost"
   assert_line "✅    Your ID was found at https://github.com/real-user"
 }
 
-@test "getGitOrganisation defaults to the GitHub ID" {
+@test "get_git_organisation defaults to the GitHub ID" {
   github_has "me"
   GIT_USER="me"
-  getGitOrganisation <<< $'\n' > /dev/null
+  get_git_organisation <<< $'\n' > /dev/null
   assert_equal "$GIT_ORG" "me"
 }
 
-@test "getGitOrganisation asks again until the organisation exists on GitHub" {
+@test "get_git_organisation asks again until the organisation exists on GitHub" {
   github_has "me" "my-org"
   GIT_USER="me"
-  getGitOrganisation <<< $'bad-org\nmy-org' > "${BATS_TEST_TMPDIR}/out"
+  get_git_organisation <<< $'bad-org\nmy-org' > "${BATS_TEST_TMPDIR}/out"
   assert_equal "$GIT_ORG" "my-org"
   run cat "${BATS_TEST_TMPDIR}/out"
   assert_line "⛔️    That Organisation was not found at https://github.com/bad-org"
@@ -158,12 +158,12 @@ git_with_main_after_one_fetch() {
   }
 }
 
-@test "cloneTemplateRepository creates a personal repository and checks out main" {
+@test "clone_template_repository creates a personal repository and checks out main" {
   gh() { record "gh $*"; }
   git_with_main_after_one_fetch
   mkdir my-repo
   GIT_USER="me" GIT_ORG="me" repositoryName="my-repo"
-  cloneTemplateRepository > /dev/null
+  clone_template_repository > /dev/null
   assert_equal "$(basename "$PWD")" "my-repo"
   run cat "$CALLS"
   assert_output - << 'EOF'
@@ -173,46 +173,46 @@ git checkout main
 EOF
 }
 
-@test "cloneTemplateRepository creates the repository under the organisation" {
+@test "clone_template_repository creates the repository under the organisation" {
   gh() { record "gh $*"; }
   git_with_main_after_one_fetch
   mkdir my-repo
   GIT_USER="me" GIT_ORG="my-org" repositoryName="my-repo"
-  cloneTemplateRepository > /dev/null
+  clone_template_repository > /dev/null
   run head -1 "$CALLS"
   assert_output "gh repo create my-org/my-repo --public --confirm --template=gotreasa/templateRepository"
 }
 
-@test "installLatestNodeAndNpmPackages pins the LTS node and updates packages" {
+@test "install_latest_node_and_npm_packages pins the LTS node and updates packages" {
   nvm() {
     if [[ "$1" == "version" ]]; then echo "v22.23.3"; else record "nvm $*"; fi
   }
   npm() { record "npm $*"; }
   npx() { record "npx $*"; }
   echo '{ "engines": { "node": "v1.0.0" } }' > package.json
-  installLatestNodeAndNpmPackages > /dev/null
+  install_latest_node_and_npm_packages > /dev/null
   assert_equal "$(cat .nvmrc)" "v22.23.3"
   assert_equal "$(cat package.json)" '{ "engines": { "node": "v22.23.3" } }'
   run cat "$CALLS"
   assert_output - << 'EOF'
 nvm install --lts
 npm i --ignore-scripts
-npx npm-check-updates -u
+npx --ignore-scripts npm-check-updates -u
 npm i --ignore-scripts
 EOF
 }
 
-@test "updateRepositoryFiles points package.json and the workflow at the new repository" {
+@test "update_repository_files points package.json and the workflow at the new repository" {
   mkdir -p .github/workflows
   echo '"url": "gotreasa/templateRepository"' > package.json
   echo 'node-version: [14.15.1]' > .github/workflows/node.js.yml
   GIT_ORG="acme" repositoryName="widget" nodeVersion="v22.23.3"
-  updateRepositoryFiles
+  update_repository_files
   assert_equal "$(cat package.json)" '"url": "acme/widget"'
   assert_equal "$(cat .github/workflows/node.js.yml)" 'node-version: [v22.23.3]'
 }
 
-@test "setupSonar rewrites the Sonar settings, stores the token and creates the project" {
+@test "setup_sonar rewrites the Sonar settings, stores the token and creates the project" {
   gh() { record "gh $*"; }
   curl() { record "curl $*"; }
   cat > sonar-project.properties << 'EOF'
@@ -226,7 +226,7 @@ https://sonarcloud.io/api/project_badges/measure?project=gotreasa_templateReposi
 EOF
   GIT_USER="me" GIT_ORG="acme" repositoryName="widget"
   SONAR_SECRET="fake-sonar-token" # pragma: allowlist secret
-  setupSonar > /dev/null
+  setup_sonar > /dev/null
   run cat sonar-project.properties
   assert_output - << 'EOF'
 sonar.organization=me
@@ -243,24 +243,24 @@ EOF
   assert_line --partial "-u fake-sonar-token: -d project=me_acme_widget&organization=me&name=acme_widget https://sonarcloud.io/api/projects/create"
 }
 
-@test "setupSonar asks for the API key when none is configured" {
+@test "setup_sonar asks for the API key when none is configured" {
   gh() { record "gh $*"; }
   curl() { :; }
   touch sonar-project.properties README.md
   GIT_USER="me" GIT_ORG="acme" repositoryName="widget"
-  setupSonar <<< $'\nentered-token' > /dev/null
+  setup_sonar <<< $'\nentered-token' > /dev/null
   run grep "SONAR_TOKEN" "$CALLS"
   assert_output "gh secret set SONAR_TOKEN -b entered-token"
 }
 
-@test "setupSnyk rewrites the Snyk badge and stores the token" {
+@test "setup_snyk rewrites the Snyk badge and stores the token" {
   gh() { record "gh $*"; }
   cat > README.md << 'EOF'
 https://snyk.io/test/github/gotreasa/templateRepository/badge.svg
 https://snyk.io/test/github/gotreasa/templateRepository
 EOF
   GIT_ORG="acme" repositoryName="widget"
-  setupSnyk <<< $'\nentered-snyk-token' > /dev/null
+  setup_snyk <<< $'\nentered-snyk-token' > /dev/null
   run cat README.md
   assert_output - << 'EOF'
 https://snyk.io/test/github/acme/widget/badge.svg
@@ -270,11 +270,11 @@ EOF
   assert_output "gh secret set SNYK_TOKEN -b entered-snyk-token"
 }
 
-@test "saveConfigToFile writes the answers next to the new repository" {
+@test "save_config_to_file writes the answers next to the new repository" {
   mkdir widget && cd widget
   GIT_USER="me" GIT_ORG="acme"
   SONAR_SECRET="fake-sonar" SNYK_SECRET="fake-snyk" # pragma: allowlist secret
-  saveConfigToFile > /dev/null
+  save_config_to_file > /dev/null
   run cat ../.templateRepositoryConfig
   assert_output - << 'EOF'
 GIT_USER=me
@@ -284,9 +284,9 @@ SNYK_SECRET=fake-snyk
 EOF
 }
 
-@test "commitCodeToGit commits everything and pushes main" {
+@test "commit_code_to_git commits everything and pushes main" {
   git() { record "git $*"; }
-  commitCodeToGit > /dev/null
+  commit_code_to_git > /dev/null
   run cat "$CALLS"
   assert_output - << 'EOF'
 git add .
@@ -295,8 +295,8 @@ git push origin main
 EOF
 }
 
-@test "printSuccessMessage names the repository" {
+@test "print_success_message names the repository" {
   repositoryName="widget"
-  run printSuccessMessage
+  run print_success_message
   assert_output "ℹ️    Repository setup for widget is now complete"
 }
