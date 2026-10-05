@@ -206,7 +206,6 @@ function main() {
   install_nvm
   get_repository_name
   get_git_user_name
-  exit
   get_git_organisation
   clone_template_repository
   install_latest_node_and_npm_packages
